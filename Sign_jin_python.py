@@ -4,7 +4,7 @@
 #
 #  2.py
 #  
-#  Copyright 2020 ÌìÇíãÂ <ÌìÇíãÂ@DESKTOP-03B3450>
+#  Copyright 2020 å¤©ç¼æ‡µ <å¤©ç¼æ‡µ@DESKTOP-03B3450>
 #  
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -33,18 +33,18 @@ from datetime import datetime, timedelta, timezone
 #from urllib3.exceptions import InsecureRequestWarning
 
 
-# »ñÈ¡µ±Ç°utcÊ±¼ä£¬²¢¸ñÊ½»¯Îª±±¾©Ê±¼ä
+# è·å–å½“å‰utcæ—¶é—´ï¼Œå¹¶æ ¼å¼åŒ–ä¸ºåŒ—äº¬æ—¶é—´
 def getTimeStr():
     utc_dt = datetime.utcnow().replace(tzinfo=timezone.utc)
     bj_dt = utc_dt.astimezone(timezone(timedelta(hours=8)))
     return bj_dt.strftime("%Y-%m-%d %H:%M:%S")
     
-# Êä³öµ÷ÊÔĞÅÏ¢£¬²¢¼°Ê±Ë¢ĞÂ»º³åÇø
+# è¾“å‡ºè°ƒè¯•ä¿¡æ¯ï¼Œå¹¶åŠæ—¶åˆ·æ–°ç¼“å†²åŒº
 def log(content):
     print(getTimeStr() + ' ' + str(content))
     sys.stdout.flush()
 
-# debugÄ£Ê½
+# debugæ¨¡å¼
 debug = False
 if debug:
 	requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -56,14 +56,14 @@ apies['login-url']='https://authserver.hactcm.edu.cn/authserver/login?service=ht
 def getSession(loginUrl):
 	params = {
 		'login_url': loginUrl,
-		# ±£Ö¤Ñ§¹¤ºÅºÍÃÜÂëÕıÈ·ÏÂÃæÁ½Ïî¾Í²»ĞèÒªÅäÖÃ
+		# ä¿è¯å­¦å·¥å·å’Œå¯†ç æ­£ç¡®ä¸‹é¢ä¸¤é¡¹å°±ä¸éœ€è¦é…ç½®
 		'needcaptcha_url': '',
 		'captcha_url': '',
-		'username': '2018181003',
-		'password': '306810'
+		'username': '201818****', #ç”¨æˆ·å
+		'password': '******'  #å¯†ç 
 		}
 	cookies = {}
-	# ½èÖúÉÏÒ»¸öÏîÄ¿¿ª·Å³öÀ´µÄµÇÂ½API£¬Ä£ÄâµÇÂ½
+	# å€ŸåŠ©ä¸Šä¸€ä¸ªé¡¹ç›®å¼€æ”¾å‡ºæ¥çš„ç™»é™†APIï¼Œæ¨¡æ‹Ÿç™»é™†
 	res = requests.post('http://www.zimo.wiki:8080/wisedu-unified-login-api-v1.0/api/login', params, verify=not debug)
 	print(res)
 	cookieStr = str(res.json()['cookies'])
@@ -71,7 +71,7 @@ def getSession(loginUrl):
 	if cookieStr == 'None':
 		log(res.json())
 		return None
-# ½âÎöcookie
+# è§£æcookie
 	for line in cookieStr.split(';'):
 		name, value = line.strip().split('=', 1)
 		cookies[name] = value
@@ -79,7 +79,7 @@ def getSession(loginUrl):
 	session.cookies = requests.utils.cookiejar_from_dict(cookies)
 	return session
 
-#±íµ¥µÇÂ½£¬ĞèÒªĞŞ¸Ä
+#è¡¨å•ç™»é™†ï¼Œéœ€è¦ä¿®æ”¹
 def queryForm(session, apis):
 	host ='hactcm.cpdaily.com' 
 	headers = {
@@ -98,11 +98,11 @@ def queryForm(session, apis):
 	if 'hactcm' in host:
 		session.get("https://authserver.hactcm.edu.cn/authserver/login?service=https%3A%2F%2Fhactcm.cpdaily.com%2Fportal%2Flogin")
 	res = session.post(queryCollectWidUrl, headers=headers, data=json.dumps(params), verify=not debug)
-	log("res.json Ç°")
+	log("res.json å‰")
 	log(session)
 	print(res.json())
 	if len(res.json()['datas']['rows']) < 1:
-		return ("²éÑ¯Ê§°Ü123")
+		return ("æŸ¥è¯¢å¤±è´¥123")
 	
 	collectWid = res.json()['datas']['rows'][0]['wid']
 	formWid = res.json()['datas']['rows'][0]['formWid']
@@ -120,14 +120,14 @@ def queryForm(session, apis):
 
 #begin
 
-log('µ±Ç°ÓÃ»§£º'+'first' )
+log('å½“å‰ç”¨æˆ·ï¼š'+'first' )
 apis=apies
-log('½Å±¾¿ªÊ¼Ö´ĞĞ¡£¡£¡£')
-log('¿ªÊ¼Ä£ÄâµÇÂ½¡£¡£¡£')
+log('è„šæœ¬å¼€å§‹æ‰§è¡Œã€‚ã€‚ã€‚')
+log('å¼€å§‹æ¨¡æ‹Ÿç™»é™†ã€‚ã€‚ã€‚')
 session = getSession(apis['login-url'])
 log(session)
 if session != None:
-	log('Ä£ÄâµÇÂ½³É¹¦¡£¡£¡£')
-	log('ÕıÔÚ²éÑ¯×îĞÂ´ıÌîĞ´ÎÊ¾í¡£¡£¡£')
+	log('æ¨¡æ‹Ÿç™»é™†æˆåŠŸã€‚ã€‚ã€‚')
+	log('æ­£åœ¨æŸ¥è¯¢æœ€æ–°å¾…å¡«å†™é—®å·ã€‚ã€‚ã€‚')
 	params = queryForm(session, apis)
 	print(params)
